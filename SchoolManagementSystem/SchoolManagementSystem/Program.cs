@@ -74,6 +74,8 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddHostedService<AutoLogoutService>();
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SchoolManagementSystem.Models;
 
 namespace SchoolManagementSystem.Data
 {
@@ -8,6 +9,7 @@ namespace SchoolManagementSystem.Data
     {
         public DbSet<RefreshToken> refreshTokens { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options): base(options) { }
+        public DbSet<LoginHistory> loginHistories { get; set; }
     }
     public class RefreshToken
     {

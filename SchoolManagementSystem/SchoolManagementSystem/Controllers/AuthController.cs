@@ -1,8 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SchoolManagementSystem.Data;
 using SchoolManagementSystem.DTO;
+using SchoolManagementSystem.Models;
 using SchoolManagementSystem.Services;
+using System.Security.Claims;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SchoolManagementSystem.Controllers
 {
@@ -14,18 +19,21 @@ namespace SchoolManagementSystem.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly TokenService _tokenService;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly AppDbContext _context;
 
         public AuthController(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             TokenService tokenService,
-            RoleManager<IdentityRole> roleManager
+            RoleManager<IdentityRole> roleManager,
+            AppDbContext context
             )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
             _roleManager = roleManager;
+            _context = context;
         }
         [HttpPost("RegisterSuperAdmin")]
         public async Task<IActionResult> RegisterSuperAdmin([FromBody] RegisterDto registerDto)
@@ -68,7 +76,71 @@ namespace SchoolManagementSystem.Controllers
             }
             var roles = await _userManager.GetRolesAsync(user);
             var token = _tokenService.GenerateToken(user, roles);
+            //login histomry 
+            var loginHostory = new LoginHistory()
+            {
+                UserId = user.Id,
+                LoginTime = DateTime.UtcNow,
+                LastActivityTime = DateTime.UtcNow,
+                LogoutTime = null
+            };
+           await _context.loginHistories.AddAsync(loginHostory);
+            await _context.SaveChangesAsync();
             return Ok(new { Token = token });
         }
+        [Authorize]
+        [HttpPost("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if(userId != null)
+            {
+                var loginEntity = await _context.loginHistories
+                    .Where(l => l.UserId == userId && l.LogoutTime == null)
+                    .OrderByDescending(l => l.LoginTime)
+                    .FirstOrDefaultAsync();
+                if(loginEntity != null)
+                {
+                    loginEntity.LogoutTime = DateTime.UtcNow;
+                    await _context.SaveChangesAsync();
+                }
+            }
+            return Ok("User Logged out successfully.");
+        }
+        [Authorize]
+        [HttpPost("UpdateActivity")]
+        public async Task<IActionResult> UpdateActivity()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if(userId != null)
+            {
+                var loginEntry = await _context.loginHistories
+                    .Where(l => l.UserId == userId && l.LogoutTime == null)
+                    .OrderByDescending(l => l.LoginTime).FirstOrDefaultAsync();
+            if(loginEntry != null)
+                {
+                    loginEntry.LastActivityTime = DateTime.UtcNow;
+                    await _context.SaveChangesAsync();
+                }
+            }
+            return Ok("Active Update.");
+        }
+        [HttpGet("ActiveUsers")]
+        public async Task<IActionResult> GetActiveUsers()
+        {
+            var activeUsers = await _context.loginHistories
+                .Where(l => l.LogoutTime == null)
+                .Select(l => l.UserId)
+                .Distinct().ToListAsync();
+            return Ok(new { count= activeUsers.Count, Users=activeUsers});
+        }
+
+        //todo call fontend after 30 secend 
+        //setInterval(function () {
+        //    fetch('/api/Auth/UpdateActivity', {
+        //    method: 'POST',
+        //headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+        //    });
+        //}, 30000); 
     }
 }
