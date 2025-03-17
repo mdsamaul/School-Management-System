@@ -53,6 +53,22 @@
   },
   {
     "ContainingType": "SchoolManagementSystem.Controllers.AuthController",
+    "Method": "RegisterPrincipal",
+    "RelativePath": "api/Auth/RegisterPrincipal",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "registerDto",
+        "Type": "SchoolManagementSystem.DTO.RegisterDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SchoolManagementSystem.Controllers.AuthController",
     "Method": "RegisterSuperAdmin",
     "RelativePath": "api/Auth/RegisterSuperAdmin",
     "HttpMethod": "POST",

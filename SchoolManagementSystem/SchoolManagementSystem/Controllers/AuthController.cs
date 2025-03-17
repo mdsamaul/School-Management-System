@@ -59,12 +59,36 @@ namespace SchoolManagementSystem.Controllers
         [HttpPost("RegisterAdmin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterDto registerDto)
         {
+            var roleExist = await _roleManager.RoleExistsAsync("Admin");
+            if (!roleExist)
+            {
+                await _roleManager.CreateAsync(new IdentityRole("Admin"));
+            }
             var user =new IdentityUser { UserName = registerDto.Email, Email = registerDto.Email };
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (!result.Succeeded) return BadRequest(result.Errors);
             await _userManager.AddToRoleAsync(user, "Admin");
             return Ok("Admin Created Successfully.");
+        }//register principal (only admin can create Principal)
+        [Authorize(Roles = "Admin")]
+        [HttpPost("RegisterPrincipal")]
+        public async Task<IActionResult> RegisterPrincipal([FromBody] RegisterDto registerDto)
+        {
+            // Check if "Principal" role exists, if not create it
+            var roleExist = await _roleManager.RoleExistsAsync("Principal");
+            if (!roleExist)
+            {
+                await _roleManager.CreateAsync(new IdentityRole("Principal"));
+            }
+
+            var user = new IdentityUser { UserName = registerDto.Email, Email = registerDto.Email };
+            var result = await _userManager.CreateAsync(user, registerDto.Password);
+            if (!result.Succeeded) return BadRequest(result.Errors);
+
+            await _userManager.AddToRoleAsync(user, "Principal");
+            return Ok("Principal Created Successfully");
         }
+
         //login any user
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
