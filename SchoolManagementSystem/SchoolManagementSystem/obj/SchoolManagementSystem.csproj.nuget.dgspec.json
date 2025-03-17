@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\school management system\\SchoolManagementSystem\\SchoolManagementSystem\\SchoolManagementSystem.csproj": {}
+    "D:\\arafat-dev\\Final Project\\Personal Project\\School-Management-System\\SchoolManagementSystem\\SchoolManagementSystem\\SchoolManagementSystem.csproj": {}
   },
   "projects": {
-    "D:\\school management system\\SchoolManagementSystem\\SchoolManagementSystem\\SchoolManagementSystem.csproj": {
+    "D:\\arafat-dev\\Final Project\\Personal Project\\School-Management-System\\SchoolManagementSystem\\SchoolManagementSystem\\SchoolManagementSystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\school management system\\SchoolManagementSystem\\SchoolManagementSystem\\SchoolManagementSystem.csproj",
+        "projectUniqueName": "D:\\arafat-dev\\Final Project\\Personal Project\\School-Management-System\\SchoolManagementSystem\\SchoolManagementSystem\\SchoolManagementSystem.csproj",
         "projectName": "SchoolManagementSystem",
-        "projectPath": "D:\\school management system\\SchoolManagementSystem\\SchoolManagementSystem\\SchoolManagementSystem.csproj",
-        "packagesPath": "C:\\Users\\mdsam\\.nuget\\packages\\",
-        "outputPath": "D:\\school management system\\SchoolManagementSystem\\SchoolManagementSystem\\obj\\",
+        "projectPath": "D:\\arafat-dev\\Final Project\\Personal Project\\School-Management-System\\SchoolManagementSystem\\SchoolManagementSystem\\SchoolManagementSystem.csproj",
+        "packagesPath": "C:\\Users\\Arafat\\.nuget\\packages\\",
+        "outputPath": "D:\\arafat-dev\\Final Project\\Personal Project\\School-Management-System\\SchoolManagementSystem\\SchoolManagementSystem\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\mdsam\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Arafat\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -45,7 +45,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net9.0": {
@@ -107,7 +107,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
