@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SchoolManagementSystem.DTO;
+using SchoolManagementSystem.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace SchoolManagementSystem.Controllers
@@ -31,12 +32,20 @@ namespace SchoolManagementSystem.Controllers
             }
             if(!await _roleManager.RoleExistsAsync(registerDto.Role))
             {
-                await _roleManager.CreateAsync(new IdentityRole(registerDto.Role));
+                return NotFound("Role Not Found");
+                //await _roleManager.CreateAsync(new IdentityRole(registerDto.Role));
             }
-            var user = new IdentityUser { UserName = registerDto.Email, Email = registerDto.Email };
+            var user = new IdentityUser { UserName = registerDto.UserName, Email = registerDto.Email };
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (!result.Succeeded) return BadRequest(result.Errors);
             await _userManager.AddToRoleAsync(user, registerDto.Role);
+            if (registerDto.Role == "Teacher")
+            {
+                var teacher = new Teachers()
+                {
+                    //todo
+                };
+            }
             return Ok("User Create Successfully.");
         }
     }

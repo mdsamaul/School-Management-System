@@ -20,13 +20,15 @@ namespace SchoolManagementSystem.Controllers
         private readonly TokenService _tokenService;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly AppDbContext _context;
+        private readonly RoleIdService _roleIdService;
 
         public AuthController(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             TokenService tokenService,
             RoleManager<IdentityRole> roleManager,
-            AppDbContext context
+            AppDbContext context,
+            RoleIdService roleIdService
             )
         {
             _userManager = userManager;
@@ -34,6 +36,7 @@ namespace SchoolManagementSystem.Controllers
             _tokenService = tokenService;
             _roleManager = roleManager;
             _context = context;
+            _roleIdService = roleIdService;
         }
         [HttpPost("RegisterSuperAdmin")]
         public async Task<IActionResult> RegisterSuperAdmin([FromBody] RegisterDto registerDto)
@@ -48,23 +51,45 @@ namespace SchoolManagementSystem.Controllers
                 await _roleManager.CreateAsync(new IdentityRole("Admin"));
             if (!await _roleManager.RoleExistsAsync("User"))
                 await _roleManager.CreateAsync(new IdentityRole("User"));
-            var user = new IdentityUser { UserName = registerDto.Email, Email = registerDto.Email };
+            var user = new IdentityUser { UserName = registerDto.UserName, Email = registerDto.Email };
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (!result.Succeeded) return BadRequest(result.Errors);
             await _userManager.AddToRoleAsync(user, "SuperAdmin");
             return Ok("Supper Admin created successfully.");
+        }
+        [Authorize(Roles ="SuperAdmin")]
+        [HttpPost("CreateRole")]
+        public async Task<IActionResult> CreateRole([FromBody] RoleDto roleDto)
+        {
+            var roleExist = await _roleManager.RoleExistsAsync(roleDto.RoleName);          
+            if (!roleExist)
+            {
+                var result =await _roleManager.CreateAsync(new IdentityRole(roleDto.RoleName));
+                if (!result.Succeeded) return BadRequest(result.Errors);
+                else return Ok("Role Create Successfully.");
+            }
+            return BadRequest("Role already exist!");
+        }
+        [HttpGet("GetAllRole")]
+        public async Task<IActionResult> GetAllRole()
+        {
+            var roles = _roleManager.Roles.ToList();
+            if (roles != null)
+                return Ok(roles);
+            else return BadRequest("Role Not Found");
         }
         //register admin (only super admin can create admin)
         [Authorize(Roles="SuperAdmin")]
         [HttpPost("RegisterAdmin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterDto registerDto)
         {
-            var roleExist = await _roleManager.RoleExistsAsync("Admin");
+            var roleExist = await _roleManager.RoleExistsAsync(registerDto.Role);
             if (!roleExist)
             {
-                await _roleManager.CreateAsync(new IdentityRole("Admin"));
+                //await _roleManager.CreateAsync(new IdentityRole("Admin"));
+                return BadRequest("Role Not Fond");
             }
-            var user =new IdentityUser { UserName = registerDto.Email, Email = registerDto.Email };
+            var user =new IdentityUser { UserName = registerDto.UserName, Email = registerDto.Email };
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (!result.Succeeded) return BadRequest(result.Errors);
             await _userManager.AddToRoleAsync(user, "Admin");
@@ -73,28 +98,47 @@ namespace SchoolManagementSystem.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost("RegisterPrincipal")]
         public async Task<IActionResult> RegisterPrincipal([FromBody] RegisterDto registerDto)
-        {
+        {         
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             // Check if "Principal" role exists, if not create it
-            var roleExist = await _roleManager.RoleExistsAsync("Principal");
+            var roleExist = await _roleManager.RoleExistsAsync(registerDto.Role);
             if (!roleExist)
             {
-                await _roleManager.CreateAsync(new IdentityRole("Principal"));
+                return BadRequest("Role Not Found");
+                //await _roleManager.CreateAsync(new IdentityRole("Principal"));
             }
 
-            var user = new IdentityUser { UserName = registerDto.Email, Email = registerDto.Email };
+            var user = new IdentityUser { UserName = registerDto.UserName, Email = registerDto.Email };
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (!result.Succeeded) return BadRequest(result.Errors);
 
             await _userManager.AddToRoleAsync(user, "Principal");
-            return Ok("Principal Created Successfully");
-        }
+            if (registerDto.Role == "Principal")
+            {
+                var teacher = new Teachers()
+                {
+                    UserId=user.Id,
+                    CreatedUserId = userId,
+                    UserName = registerDto.UserName,
+                    Email = registerDto.Email,
+                    RoleId = await _roleIdService.GetRoleIdAsync(registerDto.Role),
+                    Department = registerDto.Department,
+                    CreatedAt = DateTime.Now.ToLocalTime()
+                };
+                await _context.teachers.AddAsync(teacher);
+               await _context.SaveChangesAsync();               
+            }
+            return Ok("Principal Created Successfully");        }
+
+        
 
         //login any user
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
-            var user = await _userManager.FindByEmailAsync(loginDto.Email);
-            if(user== null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
+            //var user = await _userManager.FindByEmailAsync(loginDto.Email , loginDto.UserName);
+            var user =await _userManager.Users.Where(l => l.Email == loginDto.Email || l.UserName == loginDto.UserName).FirstOrDefaultAsync();
+            if (user== null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
             {
                 return Unauthorized("Invalid credentials");
             }
@@ -104,13 +148,19 @@ namespace SchoolManagementSystem.Controllers
             var loginHostory = new LoginHistory()
             {
                 UserId = user.Id,
-                LoginTime = DateTime.UtcNow,
-                LastActivityTime = DateTime.UtcNow,
+                LoginTime = DateTime.UtcNow.ToLocalTime(),
+                LastActivityTime = DateTime.UtcNow.ToLocalTime(),
                 LogoutTime = null
             };
            await _context.loginHistories.AddAsync(loginHostory);
             await _context.SaveChangesAsync();
-            return Ok(new { Token = token });
+            //TimeZoneInfo bangladeshTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Bangladesh Standard Time");
+            //DateTime bangladeshLoginTime = TimeZoneInfo.ConvertTimeFromUtc(loginHostory.LoginTime, bangladeshTimeZone);
+
+            //string formattedTime = bangladeshLoginTime.ToString("yyyy-MM-dd HH:mm:ss");
+
+           
+            return Ok(new { Token = token});
         }
         [Authorize]
         [HttpPost("Logout")]
@@ -125,7 +175,7 @@ namespace SchoolManagementSystem.Controllers
                     .FirstOrDefaultAsync();
                 if(loginEntity != null)
                 {
-                    loginEntity.LogoutTime = DateTime.UtcNow;
+                    loginEntity.LogoutTime = DateTime.UtcNow.ToLocalTime();
                     await _context.SaveChangesAsync();
                 }
             }

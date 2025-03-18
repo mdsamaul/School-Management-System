@@ -11,6 +11,32 @@
   },
   {
     "ContainingType": "SchoolManagementSystem.Controllers.AuthController",
+    "Method": "CreateRole",
+    "RelativePath": "api/Auth/CreateRole",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "roleDto",
+        "Type": "SchoolManagementSystem.DTO.RoleDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SchoolManagementSystem.Controllers.AuthController",
+    "Method": "GetAllRole",
+    "RelativePath": "api/Auth/GetAllRole",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SchoolManagementSystem.Controllers.AuthController",
     "Method": "Login",
     "RelativePath": "api/Auth/Login",
     "HttpMethod": "POST",
