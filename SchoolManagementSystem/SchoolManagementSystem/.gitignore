@@ -1,0 +1,16 @@
+﻿# Ignore build and compiled files
+bin/
+obj/
+
+# Ignore Entity Framework Migrations
+Migrations/
+
+# Ignore user-specific files
+*.user
+*.vs
+.vscode/
+*.suo
+*.log
+*.tmp
+*.bak
+*.swp

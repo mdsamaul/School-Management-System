@@ -2060,7 +2060,18 @@
         }
       },
       "System.Diagnostics.EventLog/8.0.0": {},
+<<<<<<< HEAD
+      "System.Formats.Asn1/9.0.3": {
+        "runtime": {
+          "lib/net9.0/System.Formats.Asn1.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.325.11113"
+          }
+        }
+      },
+=======
       "System.Formats.Asn1/9.0.3": {},
+>>>>>>> 8c9f94c5840a8dded1b40a45efbdc50b45a31fa2
       "System.IdentityModel.Tokens.Jwt/8.0.1": {
         "dependencies": {
           "Microsoft.IdentityModel.JsonWebTokens": "8.0.1",
