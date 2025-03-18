@@ -21,11 +21,6 @@ namespace SchoolManagementSystem.Services
             var role = await _roleManager.FindByNameAsync(roleName);
             return role?.Id ?? "Role not found";
         }
-
-        //public string GetRoleId(string roleName)
-        //{
-        //    var role = _roleManager.FindByNameAsync(roleName);
-        //    return role.Id.ToString();
-        //}
+        
     }
 }

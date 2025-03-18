@@ -128,9 +128,45 @@ namespace SchoolManagementSystem.Controllers
                 await _context.teachers.AddAsync(teacher);
                await _context.SaveChangesAsync();               
             }
-            return Ok("Principal Created Successfully");        }
+            return Ok("Principal Created Successfully");        
+        }
 
-        
+        [Authorize(Roles = "Principal")]
+        [HttpPost("RegisterComputerOperator")]
+        public async Task<IActionResult> RegisterComputerOperator([FromBody] RegisterDto registerDto)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            // Check if "Principal" role exists, if not create it
+            var roleExist = await _roleManager.RoleExistsAsync(registerDto.Role);
+            if (!roleExist)
+            {
+                return BadRequest("Role Not Found");
+                //await _roleManager.CreateAsync(new IdentityRole("Principal"));
+            }
+
+            var user = new IdentityUser { UserName = registerDto.UserName, Email = registerDto.Email };
+            var result = await _userManager.CreateAsync(user, registerDto.Password);
+            if (!result.Succeeded) return BadRequest(result.Errors);
+
+            await _userManager.AddToRoleAsync(user, "ComputerOperator");
+            if (registerDto.Role == "ComputerOperator")
+            {
+                var staff = new Staff()
+                {
+                    UserId = user.Id,
+                    CreatedUserId = userId,
+                    UserName = registerDto.UserName,
+                    Email = registerDto.Email,
+                    DesignationName=null,
+                    RoleId = await _roleIdService.GetRoleIdAsync(registerDto.Role),
+                    CreatedAt = DateTime.Now.ToLocalTime()
+                };
+                await _context.staff.AddAsync(staff);
+                await _context.SaveChangesAsync();
+            }
+            return Ok("Computer Operator Created Successfully");
+        }
+
 
         //login any user
         [HttpPost("Login")]

@@ -7,7 +7,8 @@ namespace SchoolManagementSystem.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int SId { get; set; }
-        public string StudentId { get; set; }      
+        public required string StudentId { get; set; }
+        public required int ClassRoll { get; set; }
         public DateTime EnrollmentDate { get; set; }
         public int AdmissionYear { get; set; }
         //public virtual ICollection<StudentHistory> StudentHistories { get; set; }
