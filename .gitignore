@@ -1,0 +1,11 @@
+.vs/
+bin/
+obj/
+# Ignore bin and obj folders
+bin/
+obj/
+
+# Ignore build outputs
+*.exe
+*.dll
+*.pdb
