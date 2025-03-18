@@ -144,8 +144,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "registerDto",
-        "Type": "SchoolManagementSystem.DTO.RegisterDto",
+        "Name": "CommonDto",
+        "Type": "SchoolManagementSystem.DTO.CommonDto",
         "IsRequired": true
       }
     ],

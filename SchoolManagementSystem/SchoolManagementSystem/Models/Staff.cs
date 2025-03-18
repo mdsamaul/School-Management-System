@@ -7,7 +7,7 @@ namespace SchoolManagementSystem.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int StaffId { get; set; }
-        public DateTime JoiningDate { get; set; }
+        public DateTime? JoiningDate { get; set; }
         public string? DesignationName { get; set; }
 
     }

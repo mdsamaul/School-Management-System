@@ -167,37 +167,58 @@ namespace SchoolManagementSystem.Controllers
             return Ok("Computer Operator Created Successfully");
         }
 
-
-        //login any user
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
-            //var user = await _userManager.FindByEmailAsync(loginDto.Email , loginDto.UserName);
-            var user =await _userManager.Users.Where(l => l.Email == loginDto.Email || l.UserName == loginDto.UserName).FirstOrDefaultAsync();
-            if (user== null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
+            var user = await _userManager.Users
+                .Where(l => l.Email == loginDto.Email || l.UserName == loginDto.UserName)
+                .FirstOrDefaultAsync();
+            if (user == null)
             {
-                return Unauthorized("Invalid credentials");
+                var student = await _context.students
+                    .Where(s => s.StudentId == loginDto.StudentId)
+                    .FirstOrDefaultAsync();
+
+                if (student == null)
+                {
+                    return Unauthorized("Invalid credentials");
+                }
+
+                user = await _userManager.Users
+                    .Where(e => e.UserName == student.UserName)
+                    .FirstOrDefaultAsync();
+
+                if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
+                {
+                    return Unauthorized("Invalid credentials");
+                }
             }
+            else
+            {
+                if (!await _userManager.CheckPasswordAsync(user, loginDto.Password))
+                {
+                    return Unauthorized("Invalid credentials");
+                }
+            }
+
             var roles = await _userManager.GetRolesAsync(user);
+
             var token = _tokenService.GenerateToken(user, roles);
-            //login histomry 
-            var loginHostory = new LoginHistory()
+
+            var loginHistory = new LoginHistory()
             {
                 UserId = user.Id,
                 LoginTime = DateTime.UtcNow.ToLocalTime(),
                 LastActivityTime = DateTime.UtcNow.ToLocalTime(),
                 LogoutTime = null
             };
-           await _context.loginHistories.AddAsync(loginHostory);
+
+            await _context.loginHistories.AddAsync(loginHistory);
             await _context.SaveChangesAsync();
-            //TimeZoneInfo bangladeshTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Bangladesh Standard Time");
-            //DateTime bangladeshLoginTime = TimeZoneInfo.ConvertTimeFromUtc(loginHostory.LoginTime, bangladeshTimeZone);
 
-            //string formattedTime = bangladeshLoginTime.ToString("yyyy-MM-dd HH:mm:ss");
-
-           
-            return Ok(new { Token = token});
+            return Ok(new { Token = token });
         }
+
         [Authorize]
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout()

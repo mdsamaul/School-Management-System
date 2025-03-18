@@ -9,7 +9,7 @@ namespace SchoolManagementSystem.Models
         public int SId { get; set; }
         public required string StudentId { get; set; }
         public required int ClassRoll { get; set; }
-        public DateTime EnrollmentDate { get; set; }
+        public DateTime? EnrollmentDate { get; set; }
         public int AdmissionYear { get; set; }
         //public virtual ICollection<StudentHistory> StudentHistories { get; set; }
         public virtual ICollection<AssignmentSubmissions> assignmentSubmissions { get; set; }

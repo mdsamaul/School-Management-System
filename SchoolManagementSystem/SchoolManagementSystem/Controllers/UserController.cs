@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using SchoolManagementSystem.Data;
 using SchoolManagementSystem.DTO;
 using SchoolManagementSystem.Models;
@@ -11,7 +12,7 @@ using System.Security.Claims;
 
 namespace SchoolManagementSystem.Controllers
 {
-    [Authorize(Roles = "Principal,computerOperator")]
+    [Authorize(Roles = "Principal,ComputerOperator")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : Controller
@@ -61,7 +62,15 @@ namespace SchoolManagementSystem.Controllers
                     Email = CommonDto.Email,
                     RoleId = await _roleIdService.GetRoleIdAsync(CommonDto.Role),
                     Department = CommonDto.Department,
-                    CreatedAt = DateTime.Now.ToLocalTime()
+                    CreatedAt = DateTime.Now.ToLocalTime(),
+                    FirstName = CommonDto.FirstName,
+                    LastName = CommonDto.LastName,
+                    DateOfBirth = CommonDto.DateOfBirth,
+                    Address = CommonDto.Address,
+                    Gender = CommonDto.Gender,
+                    IsActive = CommonDto.IsActive,
+                    PhoneNumber = CommonDto.PhoneNumber,
+                    Status = CommonDto.Status,
                 };
                 await _context.teachers.AddAsync(teacher);
                 await _context.SaveChangesAsync(); 
@@ -76,7 +85,16 @@ namespace SchoolManagementSystem.Controllers
                     Email = CommonDto.Email,
                     DesignationName = null,
                     RoleId = await _roleIdService.GetRoleIdAsync(CommonDto.Role),
-                    CreatedAt = DateTime.Now.ToLocalTime()
+                    CreatedAt = DateTime.Now.ToLocalTime(),
+                    FirstName = CommonDto.FirstName,
+                    LastName = CommonDto.LastName,
+                    Address = CommonDto.Address,
+                    DateOfBirth = CommonDto.DateOfBirth,
+                    Gender = CommonDto.Gender,
+                    JoiningDate = CommonDto.JoiningDate,
+                    PhoneNumber = CommonDto.PhoneNumber,
+                    Status = CommonDto.Status,
+                    IsActive = CommonDto.IsActive
                 };
                 await _context.staff.AddAsync(staff);
                 await _context.SaveChangesAsync();
@@ -110,7 +128,21 @@ namespace SchoolManagementSystem.Controllers
                     RoleId = await _roleIdService.GetRoleIdAsync(CommonDto.Role),
                     CreatedAt = DateTime.Now.ToLocalTime(),
                     AdmissionYear = DateTime.Now.Year,
+                    FirstName = CommonDto.FirstName,
+                    LastName = CommonDto.LastName,
+                    Address = CommonDto.Address,
+                    DateOfBirth = CommonDto.DateOfBirth,
+                    PhoneNumber = CommonDto.PhoneNumber,
+                    Gender = CommonDto.Gender,
+                    EnrollmentDate = CommonDto.EnrollmentDate,
+                    IsActive = CommonDto.IsActive,
+                    Status = CommonDto.Status                    
                 };
+                //if(CommonDto.ImageFile != null)
+                //{
+                //    var file = 
+                //}
+
                 await _context.students.AddAsync(student);
                 await _context.SaveChangesAsync();
                 return Ok("Student Create Successfully.");

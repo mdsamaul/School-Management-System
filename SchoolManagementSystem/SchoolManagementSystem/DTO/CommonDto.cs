@@ -11,7 +11,7 @@
         public string? Department { get; set; }
 
         //student 
-        public int SId { get; set; }
+        public int? SId { get; set; }
         public string? StudentId { get; set; }
         public int? ClassRoll { get; set; }
         public DateTime? EnrollmentDate { get; set; }
@@ -29,7 +29,7 @@
         public string? Gender { get; set; }
         public string? Address { get; set; } = string.Empty;
         public string? Image { get; set; }
-        public IFormFile? ImageFile { get; set; }
+        //public IFormFile? ImageFile { get; set; }
 
         //teacher
         public int? TeacherId { get; set; }
