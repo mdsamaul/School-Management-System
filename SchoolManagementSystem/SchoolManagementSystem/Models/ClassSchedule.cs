@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SchoolManagementSystem.Models
 {
     public class ClassSchedule
     {
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ClassScheduleId { get; set; }
         [ForeignKey("Teachers")]
         public int TeacherId { get; set; }

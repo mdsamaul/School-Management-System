@@ -9,13 +9,7 @@ namespace SchoolManagementSystem.Models
         public int StudentHistoryId { get; set; }
         [ForeignKey("Students")]
         public int SId { get; set; }
-        public virtual Students Students { get; set; }
-        //[ForeignKey("Department")]
-        //public int DepartmentId { get; set; }
-        //public virtual Department Department { get; set; }
-        //[ForeignKey("Designation")]
-        //public int DesignationId { get; set; }
-        //public virtual Designation Designation { get; set; }
+        public virtual Students Students { get; set; }       
         public string Previous { get; set; }
         public string Status {  get; set; }
         public int Year { get; set; }

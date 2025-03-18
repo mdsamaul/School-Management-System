@@ -7,17 +7,9 @@ namespace SchoolManagementSystem.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int SId { get; set; }
-        public string StudentId { get; set; }
-        //[ForeignKey("Department")]
-        //public int DepartmentId { get; set; }
-        //public virtual Department Department { get; set; }
-        //[ForeignKey("Designation")]
-        //public int DesignationId { get; set; }
-        //public virtual Designation Designation { get; set; }
-        //[ForeignKey("Users")]
-        //public string UserId { get; set; } = string.Empty;
-        //public virtual Users Users { get; set; }
-        public DateTime EnrollmentDate { get; set; }
+        public required string StudentId { get; set; }
+        public required int ClassRoll { get; set; }
+        public DateTime? EnrollmentDate { get; set; }
         public int AdmissionYear { get; set; }
         //public virtual ICollection<StudentHistory> StudentHistories { get; set; }
         public virtual ICollection<AssignmentSubmissions> assignmentSubmissions { get; set; }
