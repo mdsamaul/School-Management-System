@@ -43,7 +43,7 @@ namespace SchoolManagementSystem.Controllers
         }
 
         // PUT: api/Students/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        
         [HttpPut("{id}")]
         public async Task<IActionResult> PutStudents(int id, Students students)
         {
@@ -74,7 +74,7 @@ namespace SchoolManagementSystem.Controllers
         }
 
         // POST: api/Students
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+       
         [HttpPost]
         public async Task<ActionResult<Students>> PostStudents(Students students)
         {
