@@ -78,6 +78,34 @@ namespace SchoolManagementSystem.Controllers
                 return Ok(roles);
             else return BadRequest("Role Not Found");
         }
+        [Authorize(Roles = "SuperAdmin")]
+        [HttpPost("RegisterSchool")]
+        public async Task<IActionResult> RegisterSchool([FromBody] SchoolDto schoolDto)
+        {
+            if (ModelState.IsValid)
+            {
+                Schools schools = new Schools()
+                {
+                    SchoolName = schoolDto.SchoolName,
+                    EiinNumber = schoolDto.EiinNumber,
+                };
+
+                await _context.schools.AddAsync(schools); 
+                var result = await _context.SaveChangesAsync(); 
+
+                if (result > 0)
+                {
+                    return Ok("School Registered Successfully");
+                }
+                else
+                {
+                    return BadRequest("Failed to register school");
+                }
+            }
+
+            return BadRequest("Invalid model data");
+        }
+
         //register admin (only super admin can create admin)
         [Authorize(Roles="SuperAdmin")]
         [HttpPost("RegisterAdmin")]
@@ -89,10 +117,28 @@ namespace SchoolManagementSystem.Controllers
                 //await _roleManager.CreateAsync(new IdentityRole("Admin"));
                 return BadRequest("Role Not Fond");
             }
+            var sId = await _context.schools.FindAsync(registerDto.SchoolId);
+            if (sId== null)
+            {
+                return NotFound("School Id Not found");
+            }
             var user =new IdentityUser { UserName = registerDto.UserName, Email = registerDto.Email };
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (!result.Succeeded) return BadRequest(result.Errors);
             await _userManager.AddToRoleAsync(user, "Admin");
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Admins admins = new Admins()
+            {
+                SchoolId = registerDto.SchoolId,
+                UserId = user.Id,
+                Email = registerDto.Email,
+                UserName = registerDto.UserName,
+                CreatedUserId = userId,
+                CreatedAt = DateTime.Now.ToLocalTime(),
+                RoleId = await _roleIdService.GetRoleIdAsync(registerDto.Role)
+            };
+            await _context.admins.AddAsync(admins);
+            await _context.SaveChangesAsync();
             return Ok("Admin Created Successfully.");
         }//register principal (only admin can create Principal)
         [Authorize(Roles = "Admin")]

@@ -19,5 +19,8 @@ namespace SchoolManagementSystem.Models
         public string DayOfWeek { get; set; }
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
+        [ForeignKey("Schools")]
+        public int SchoolId { get; set; }
+        public virtual Schools Schools { get; set; }
     }
 }

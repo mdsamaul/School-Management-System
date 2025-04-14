@@ -11,6 +11,9 @@ namespace SchoolManagementSystem.Models
         public required int ClassRoll { get; set; }
         public DateTime? EnrollmentDate { get; set; }
         public int AdmissionYear { get; set; }
+        [ForeignKey("Schools")]
+        public int SchoolId { get; set; }
+        public virtual Schools Schools { get; set; }
         //public virtual ICollection<StudentHistory> StudentHistories { get; set; }
         public virtual ICollection<AssignmentSubmissions> assignmentSubmissions { get; set; }
         public virtual ICollection<Attendance> attendances { get; set; }
