@@ -13,6 +13,6 @@ namespace SchoolManagementSystem.Models
         [ForeignKey("Classes")]
         public int ClassId { get; set; }
         public virtual Classes Classes { get; set; }
-        public int Year { get; set; }
+        public int? Year { get; set; }
     }
 }

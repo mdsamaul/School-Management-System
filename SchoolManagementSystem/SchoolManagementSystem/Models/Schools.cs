@@ -7,13 +7,13 @@ namespace SchoolManagementSystem.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int SchoolId { get; set; }
-        public string SchoolName { get; set; }
-        public string EiinNumber { get; set; }
-        public string Category { get; set; }
-        public string Address { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Email { get; set; }
-        public string LogoPath { get; set; }
+        public string? SchoolName { get; set; }
+        public string? EiinNumber { get; set; }
+        public string? Category { get; set; }
+        public string? Address { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? Email { get; set; }
+        public string? LogoPath { get; set; }
         public bool IsActive { get; set; }
 
         public virtual ICollection<Students> Students { get; set; }

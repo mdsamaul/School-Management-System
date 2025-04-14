@@ -7,8 +7,8 @@ namespace SchoolManagementSystem.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int AssignmentId { get; set; }
-        public string Title { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
+        public string? Title { get; set; } = string.Empty;
+        public string? Description { get; set; } = string.Empty;
         //[ForeignKey("Courses")]
         //public int CourseId { get; set; }
         //public virtual Courses Courses { get; set; }
@@ -22,7 +22,7 @@ namespace SchoolManagementSystem.Models
         public int SubjectId { get; set; }
         public virtual Subjects Subjects { get; set; }
         public string UserId { get; set; } = string.Empty;
-        public DateTime DueDate { get; set; }
+        public DateTime? DueDate { get; set; }
         public virtual ICollection<AssignmentSubmissions> assignmentSubmissions { get; set; }
     }
 }

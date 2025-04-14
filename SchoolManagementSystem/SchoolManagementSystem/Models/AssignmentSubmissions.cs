@@ -13,7 +13,7 @@ namespace SchoolManagementSystem.Models
         [ForeignKey("Students")]
         public int SId { get; set; }
         public virtual Students Students { get; set; }
-        public DateTime SubmittedDate { get; set; }
-        public float Marks { get; set; }
+        public DateTime? SubmittedDate { get; set; }
+        public float? Marks { get; set; }
     }
 }
