@@ -7,7 +7,7 @@ namespace SchoolManagementSystem.Models
     {
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int SubjectId { get; set; }
-        public string SubjectName { get; set; }
+        public string? SubjectName { get; set; }
         [ForeignKey("Schools")]
         public int SchoolId { get; set; }
         public virtual Schools Schools { get; set; }

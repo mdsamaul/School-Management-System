@@ -16,8 +16,8 @@ namespace SchoolManagementSystem.Models
         [ForeignKey("Subjects")]
         public int SubjectId { get; set; }
         public virtual Subjects Subjects { get; set; }
-        public string DayOfWeek { get; set; }
-        public TimeOnly StartTime { get; set; }
+        public string? DayOfWeek { get; set; }
+        public TimeOnly? StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
         [ForeignKey("Schools")]
         public int SchoolId { get; set; }

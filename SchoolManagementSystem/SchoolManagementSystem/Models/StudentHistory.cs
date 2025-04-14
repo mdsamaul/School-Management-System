@@ -10,8 +10,8 @@ namespace SchoolManagementSystem.Models
         [ForeignKey("Students")]
         public int SId { get; set; }
         public virtual Students Students { get; set; }       
-        public string Previous { get; set; }
-        public string Status {  get; set; }
-        public int Year { get; set; }
+        public string? Previous { get; set; }
+        public string? Status {  get; set; }
+        public int?  Year { get; set; }
     }
 }

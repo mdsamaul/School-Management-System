@@ -7,8 +7,8 @@ namespace SchoolManagementSystem.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int AttendanceId { get; set; }        
-        public DateTime AttendanceDate {  get; set; }
-        public string Status { get; set; }
+        public DateTime? AttendanceDate {  get; set; }
+        public string? Status { get; set; }
         public string UserId { get; set; } = string.Empty;
         [ForeignKey("Students")]
         public int SId { get; set; }
