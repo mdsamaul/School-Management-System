@@ -8,6 +8,9 @@ namespace SchoolManagementSystem.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ClassId { get; set; }
         public string ClassName { get; set; }
+        [ForeignKey("Schools")]
+        public int SchoolId { get; set; }
+        public virtual Schools Schools { get; set; }
         public virtual ICollection<Assignments> assignments { get; set; }
         public virtual ICollection<Attendance> attendances { get; set; }
         public virtual ICollection<ClassSchedule> classSchedule { get; set; }

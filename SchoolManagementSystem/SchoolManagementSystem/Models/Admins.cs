@@ -3,15 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SchoolManagementSystem.Models
 {
-    public class Staff:Users
+    public class Admins : Users
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int StaffId { get; set; }
-        public DateTime? JoiningDate { get; set; }
-        public string? DesignationName { get; set; }
+        public int AdminId { get; set; }
         [ForeignKey("Schools")]
         public int SchoolId { get; set; }
-        public virtual Schools Schools { get; set; }
-
+        public virtual Schools? Schools { get; set; }
     }
 }
