@@ -163,11 +163,12 @@ namespace SchoolManagementSystem.Controllers
             {
                 var teacher = new Teachers()
                 {
-                    UserId=user.Id,
+                    UserId = user.Id,
                     CreatedUserId = userId,
                     UserName = registerDto.UserName,
                     Email = registerDto.Email,
                     RoleId = await _roleIdService.GetRoleIdAsync(registerDto.Role),
+                    SchoolId = registerDto.SchoolId,
                     Department = registerDto.Department,
                     CreatedAt = DateTime.Now.ToLocalTime()
                 };
@@ -310,6 +311,65 @@ namespace SchoolManagementSystem.Controllers
                 .Select(l => l.UserId)
                 .Distinct().ToListAsync();
             return Ok(new { count= activeUsers.Count, Users=activeUsers});
+        }
+        [Authorize(Roles = "Principal")]
+        [HttpPost("RegisterStudent")]
+        public async Task<IActionResult> RegisterStudent([FromBody] StudentDto studentDto)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            // Check if "Student" role exists
+            var roleExist = await _roleManager.RoleExistsAsync("Student");
+            if (!roleExist)
+            {
+                return BadRequest("Role Not Found");
+            }
+
+            // Create IdentityUser with Password from DTO
+            var user = new IdentityUser
+            {
+                UserName = studentDto.UserName,
+                Email = studentDto.Email,
+                PhoneNumber = studentDto.PhoneNumber
+            };
+
+            var result = await _userManager.CreateAsync(user, studentDto.Password);
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            // Assign role to the user
+            await _userManager.AddToRoleAsync(user, "Student");
+
+            // Insert into Student table
+            var student = new Students
+            {
+                UserId = user.Id,
+                StudentId = studentDto.StudentId,
+                ClassRoll = studentDto.ClassRoll,
+                EnrollmentDate = studentDto.EnrollmentDate,
+                AdmissionYear = studentDto.AdmissionYear,
+                FirstName = studentDto.FirstName,
+                LastName = studentDto.LastName,
+                UserName = studentDto.UserName,
+                Email = studentDto.Email,
+                PhoneNumber = studentDto.PhoneNumber,
+                DateOfBirth = studentDto.DateOfBirth,
+                RoleId = await _roleIdService.GetRoleIdAsync("Student"),
+                CreatedUserId = userId,
+                CreatedAt = DateTime.Now.ToLocalTime(),
+                IsActive = studentDto.IsActive,
+                Status = studentDto.Status,
+                Gender = studentDto.Gender,
+                Address = studentDto.Address,
+                Image = studentDto.Image
+            };
+
+            await _context.students.AddAsync(student);
+            await _context.SaveChangesAsync();
+
+            return Ok("Student Registered Successfully");
         }
 
         //todo call fontend after 30 secend 
